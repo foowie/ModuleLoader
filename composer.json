@@ -11,5 +11,10 @@
 	],
 	"require": {
 		"nette/nette": "@dev"
-	}
+	},
+	"autoload": {
+		"psr-0": {
+			"ModuleLoader": "src/"
+		}
+	}	
 }
