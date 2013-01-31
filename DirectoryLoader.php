@@ -12,13 +12,26 @@ class DirectoryLoader extends \Nette\Object {
 
 	/** @var string Pattern for file name */
 	protected $pattern;
-	
+
+	/**
+	 * Constructor
+	 * @param \Nette\DI\ContainerBuilder $builder
+	 * @param string $pattern Pattern for files to load
+	 */
 	function __construct(\Nette\DI\ContainerBuilder $builder, $pattern = '/^(?!(Base|I[A-Z]|Abstract)).*/') {
 		$this->builder = $builder;
 		$this->pattern = $pattern;
 	}
 
-	public function loadDirectory($directory, $namespace, array $setup = array()) {
+	/**
+	 * Load files in directory
+	 * @param string $directory Directory to load
+	 * @param string $namespace Namespace of files in current directory (for config naming)
+	 * @param string[] $setup Default setup for files
+	 * @param bool $recursive Do recursive search
+	 * @throws \Nette\InvalidStateException
+	 */
+	public function loadDirectory($directory, $namespace, array $setup = array(), $recursive = true) {
 		if (!file_exists($directory)) {
 			return;
 		}
@@ -28,7 +41,9 @@ class DirectoryLoader extends \Nette\Object {
 		}
 
 		$namespace = trim($namespace, '\\');
-		$configNamespace = implode('.', array_map(function($part) {return lcfirst($part);}, explode('\\', $namespace)));
+		$configNamespace = implode('.', array_map(function($part) {
+							return lcfirst($part);
+						}, explode('\\', $namespace)));
 
 		foreach (\Nette\Utils\Finder::findFiles('*.php')->from($directory) as $file) {
 			$fileName = $this->getFileNameWithoutExt($file->getFileName());
@@ -44,19 +59,58 @@ class DirectoryLoader extends \Nette\Object {
 				}
 			}
 		}
+
+		if ($recursive) {
+			foreach ($this->getSubdirectories($directory) as $directoryName) {
+				$subDirectory = $directory . '/' . $directoryName;
+				$subNamespace = $namespace . '\\' . $directoryName;
+				$this->loadDirectory($subDirectory, $subNamespace);
+			}
+		}
 	}
 
+	/**
+	 * Format configuration name
+	 * @param string $fileName
+	 * @param string $configNamespace
+	 * @return string
+	 */
 	protected function formatFileConfigName($fileName, $configNamespace) {
 		return $configNamespace . '.' . lcfirst($fileName);
 	}
 
+	/**
+	 * Format class name from namespace
+	 * @param string $fileName
+	 * @param string $namespace
+	 * @return string
+	 */
 	protected function formatClassName($fileName, $namespace) {
 		return $namespace . '\\' . ucfirst($fileName);
 	}
 
+	/**
+	 * Get file name without extension
+	 * @param string $fileName
+	 * @return string
+	 */
 	protected function getFileNameWithoutExt($fileName) {
 		$dot = strrpos($fileName, '.');
 		return ($dot === false) ? $fileName : substr($fileName, 0, $dot);
+	}
+
+	/**
+	 * Get subrirectory names from given directory
+	 * @param string $directory
+	 * @return string
+	 */
+	protected function getSubdirectories($directory) {
+		if (!file_exists($directory)) {
+			return array();
+		}
+		return array_map(function($file) {
+							return $file->getFileName();
+						}, iterator_to_array(\Nette\Utils\Finder::findDirectories('*')->in($directory)));
 	}
 
 	/**
@@ -65,7 +119,7 @@ class DirectoryLoader extends \Nette\Object {
 	 * @return boolean
 	 */
 	protected function isValidServiceName($fileName) {
-		return (bool)\Nette\Utils\Strings::match($fileName, $this->pattern);
+		return (bool) \Nette\Utils\Strings::match($fileName, $this->pattern);
 	}
 
 	/**

@@ -13,14 +13,24 @@ class NamesaceLoader extends \Nette\Object {
 	/** @var string */
 	protected $baseDirectory;
 
+	/**
+	 * Constructior
+	 * @param \ModuleLoader\DirectoryLoader $directoryLoader
+	 * @param string $baseDirectory Absolute base directory of base namespace
+	 */
 	function __construct(DirectoryLoader $directoryLoader, $baseDirectory) {
 		$this->directoryLoader = $directoryLoader;
 		$this->baseDirectory = $baseDirectory;
 	}
 
-	public function loadNamespace($namespace, array $setup = array()) {
+	/**
+	 * Load files in given namespace
+	 * @param string $namespace
+	 * @param array $setup
+	 */
+	public function loadNamespace($namespace, array $setup = array(), $recursive = true) {
 		$directory = $this->baseDirectory . '/' . str_replace('\\', '/', trim($namespace, '\\'));
-		$this->directoryLoader->loadDirectory($directory, $namespace, $setup);
+		$this->directoryLoader->loadDirectory($directory, $namespace, $setup, $recursive);
 	}
 
 }

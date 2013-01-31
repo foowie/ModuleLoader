@@ -1,4 +1,20 @@
 {
-    "name": "Foowie/ModuleLoader",
-    "description" : "Autoload module content"
+	"name": "Foowie/ModuleLoader",
+	"type": "library",
+	"description": "Automatic service loader for Nette Framework",
+	"keywords": ["nette", "service loader"],
+	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+	"authors": [
+	{
+		"name": "Daniel Robenek"
+	}
+	],
+	"require": {
+		"nette/nette": "@dev"
+	},
+	"autoload": {
+		"psr-0": {
+			"ModuleLoader\\": "/"
+		}
+	}
 }
