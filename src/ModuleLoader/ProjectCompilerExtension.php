@@ -23,7 +23,9 @@ class ProjectCompilerExtension extends \Nette\Config\CompilerExtension {
 		'Handlers' => array(
 			self::TAGS => array('handler'),
 		),
-		'Validators' => array(),
+		'Validators' => array(
+			self::TAGS => array('validator'),
+		),
 		'Facades' => array(),
 		'Services' => array(),
 		'Repositories' => array(),
