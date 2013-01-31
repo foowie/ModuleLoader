@@ -10,6 +10,7 @@ class ProjectCompilerExtension extends \Nette\Config\CompilerExtension {
 	const RECURSIVE = 'recursive';
 	const FILE_PATTERN = 'pattern';
 	const SETUP = 'setup';
+	const TAGS = 'tags';
 
 	/** @var string regex module pattern */
 	protected $moduleDirectoryPattern = '/Module$/';
@@ -19,7 +20,10 @@ class ProjectCompilerExtension extends \Nette\Config\CompilerExtension {
 
 	/** configuration */
 	protected $namespaces = array(
-		'Commands' => array(),
+		'Handlers' => array(
+			self::TAGS => array('handler'),
+		),
+		'Validators' => array(),
 		'Facades' => array(),
 		'Services' => array(),
 		'Repositories' => array(),
@@ -112,8 +116,9 @@ class ProjectCompilerExtension extends \Nette\Config\CompilerExtension {
 			$recursive = isset($config[self::RECURSIVE]) ? $config[self::RECURSIVE] : true;
 			$pattern = isset($config[self::FILE_PATTERN]) ? $config[self::FILE_PATTERN] : $this->defaultFilePattern;
 			$setup = isset($config[self::SETUP]) ? $config[self::SETUP] : array();
+			$tags = isset($config[self::TAGS]) ? $config[self::TAGS] : array();
 			$directoryLoader = new DirectoryLoader($this->getContainerBuilder(), $pattern);
-			$directoryLoader->loadDirectory($directory . '/' . $namespace, $currentNamespace . '\\' . $namespace, $setup, $recursive);
+			$directoryLoader->loadDirectory($directory . '/' . $namespace, $currentNamespace . '\\' . $namespace, $setup, $tags, $recursive);
 		}
 	}
 

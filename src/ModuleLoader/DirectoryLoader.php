@@ -28,10 +28,11 @@ class DirectoryLoader extends \Nette\Object {
 	 * @param string $directory Directory to load
 	 * @param string $namespace Namespace of files in current directory (for config naming)
 	 * @param string[] $setup Default setup for files
+	 * @param string[] $tags Default tags for files
 	 * @param bool $recursive Do recursive search
 	 * @throws \Nette\InvalidStateException
 	 */
-	public function loadDirectory($directory, $namespace, array $setup = array(), $recursive = true) {
+	public function loadDirectory($directory, $namespace, array $setup = array(), array $tags = array(), $recursive = true) {
 		if (!file_exists($directory)) {
 			return;
 		}
@@ -55,6 +56,13 @@ class DirectoryLoader extends \Nette\Object {
 					$definition = $this->builder->addDefinition($configName)->setClass($className);
 					foreach ($setup as $method) {
 						$definition->addSetup($method);
+					}
+					foreach ($tags as $tag) {
+						if(is_array($tag)) {
+							$definition->addTag($tag[0], $tag[1]);
+						} else {
+							$definition->addTag($tag);
+						}
 					}
 				}
 			}
