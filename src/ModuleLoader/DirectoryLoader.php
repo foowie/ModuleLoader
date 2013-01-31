@@ -45,7 +45,7 @@ class DirectoryLoader extends \Nette\Object {
 							return lcfirst($part);
 						}, explode('\\', $namespace)));
 
-		foreach (\Nette\Utils\Finder::findFiles('*.php')->from($directory) as $file) {
+		foreach (\Nette\Utils\Finder::findFiles('*.php')->in($directory) as $file) {
 			$fileName = $this->getFileNameWithoutExt($file->getFileName());
 			$configName = $this->formatFileConfigName($fileName, $configNamespace);
 
