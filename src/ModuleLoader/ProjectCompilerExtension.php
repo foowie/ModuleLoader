@@ -16,7 +16,7 @@ class ProjectCompilerExtension extends \Nette\Config\CompilerExtension {
 	protected $moduleDirectoryPattern = '/Module$/';
 
 	/** @var string regex default file pattern */
-	protected $defaultFilePattern = '/^(?!(Base|I[A-Z]|Abstract)).*/';
+	protected $defaultFilePattern = '/^(?!(I[A-Z]|Abstract)).*/';
 
 	/** configuration */
 	protected $namespaces = array(

@@ -18,7 +18,7 @@ class DirectoryLoader extends \Nette\Object {
 	 * @param \Nette\DI\ContainerBuilder $builder
 	 * @param string $pattern Pattern for files to load
 	 */
-	function __construct(\Nette\DI\ContainerBuilder $builder, $pattern = '/^(?!(Base|I[A-Z]|Abstract)).*/') {
+	function __construct(\Nette\DI\ContainerBuilder $builder, $pattern = '/^(?!(I[A-Z]|Abstract)).*/') {
 		$this->builder = $builder;
 		$this->pattern = $pattern;
 	}
